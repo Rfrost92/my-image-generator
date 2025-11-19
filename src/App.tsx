@@ -12,7 +12,8 @@ export default function App() {
     const [loading, setLoading] = useState(false);
     const [history, setHistory] = useState<HistoryItem[]>([]);
     const [selectedImage, setSelectedImage] = useState<HistoryItem | null>(null);
-
+    const API_BASE_URL =
+        import.meta.env.VITE_API_BASE_URL || "http://localhost:5003";
     const [selectedModel, setSelectedModel] = useState("runware:100@1"); // FLUX schnell
     const [selectedResolution, setSelectedResolution] = useState<{ width: number; height: number }>({
         width: 512,
@@ -22,7 +23,7 @@ export default function App() {
     useEffect(() => {
         const fetchHistory = async () => {
             try {
-                const response = await fetch("http://localhost:5003/api/images");
+                const response = await fetch(`${API_BASE_URL}/api/images`);
                 const data = await response.json();
                 setHistory(data.images || []);
             } catch (error) {
@@ -40,7 +41,7 @@ export default function App() {
         setImageUrl(null);
 
         try {
-            const response = await fetch("http://localhost:5003/api/generate", {
+            const response = await fetch(`${API_BASE_URL}/api/generate`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
