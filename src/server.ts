@@ -26,9 +26,9 @@ cloudinary.config({
 });
 
 // Type guard to check if response is valid
-const _isValidApiResponse = (obj: any): obj is RunwareApiResponse => {
-  return obj && obj.data && Array.isArray(obj.data) && obj.data.length > 0 && typeof obj.data[0].imageURL === "string";
-};
+//const _isValidApiResponse = (obj: any): obj is RunwareApiResponse => {
+ // return obj && obj.data && Array.isArray(obj.data) && obj.data.length > 0 && typeof obj.data[0].imageURL === "string";
+//};
 
 app.post("/api/generate", async (req: Request, res: Response): Promise<void> => {
   const { prompt, model, width, height } = req.body;
