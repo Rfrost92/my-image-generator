@@ -36,31 +36,32 @@ app.post("/api/generate", async (req: Request, res: Response): Promise<void> => 
     res.status(400).json({ error: "Prompt is required" });
     return;
   }
-
-  try {
-    const response = await fetch("https://api.runware.ai/v1", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${API_KEY}`,
+ const payload = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${API_KEY}`,
+    },
+    body: JSON.stringify([
+      {
+        taskType: "authentication",
+        apiKey: API_KEY,
       },
-      body: JSON.stringify([
-        {
-          taskType: "authentication",
-          apiKey: API_KEY,
-        },
-        {
-          taskType: "imageInference",
-          taskUUID: uuidv4(),
-          positivePrompt: prompt,
-          width: width || 512,
-          height: height || 512,
-          model: model || "runware:100@1",
-          numberResults: 1,
-        },
-      ]),
-    });
+      {
+        taskType: "imageInference",
+        taskUUID: uuidv4(),
+        positivePrompt: prompt,
+        width: width || 512,
+        height: height || 512,
+        model: model || "runware:100@1",
+        numberResults: 1,
+      },
+    ]),
+  }
+  try {
+    const response = await fetch("https://api.runware.ai/v1", payload);
 
+    console.log('payload', payload)
     const data: any = await response.json(); // First, parse as any
 
     if (!isValidApiResponse(data)) {
@@ -68,8 +69,9 @@ app.post("/api/generate", async (req: Request, res: Response): Promise<void> => 
       res.status(500).json({ error: "Invalid response from AI API" });
       return;
     }
-
+    console.log(data);
     const imageUrl = data.data[0].imageURL;
+    console.log(imageUrl);
 
     // Upload the generated image to Cloudinary
     const uploadedImage = await cloudinary.uploader.upload(imageUrl, {
