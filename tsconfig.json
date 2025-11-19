@@ -8,6 +8,8 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "module": "CommonJS",
-    "target": "ES6"
+    "target": "ES6",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   }
 }
