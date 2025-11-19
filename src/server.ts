@@ -26,7 +26,7 @@ cloudinary.config({
 });
 
 // Type guard to check if response is valid
-const isValidApiResponse = (obj: any): obj is RunwareApiResponse => {
+const _isValidApiResponse = (obj: any): obj is RunwareApiResponse => {
   return obj && obj.data && Array.isArray(obj.data) && obj.data.length > 0 && typeof obj.data[0].imageURL === "string";
 };
 
@@ -94,7 +94,7 @@ app.post("/api/generate", async (req: Request, res: Response): Promise<void> => 
   }
 });
 
-app.get("/api/images", async (req: Request, res: Response): Promise<void> => {
+app.get("/api/images", async (_req: Request, res: Response): Promise<void> => {
   try {
     // ✅ Fetch all images from the "generated_images" folder
     const result = await cloudinary.search
