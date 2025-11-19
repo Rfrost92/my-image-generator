@@ -15,7 +15,7 @@ const API_KEY = process.env.VITE_RUNWARE_API_KEY;
 
 // Define the expected response type
 interface RunwareApiResponse {
-  data?: { imageURL: string }[];
+  data: { imageURL: string }[];
 }
 
 cloudinary.config({
@@ -62,15 +62,17 @@ app.post("/api/generate", async (req: Request, res: Response): Promise<void> => 
   try {
     const response = await fetch("https://api.runware.ai/v1", payload);
 
-    console.log('payload', payload)
-    const data: any = await response.json(); // First, parse as any
+    console.log("payload", payload);
 
-    if (!isValidApiResponse(data)) {
-      console.error("Unexpected API response format:", data);
+    const raw = await response.json();
+    const data = raw as RunwareApiResponse;
+
+    if (!data.data || data.data.length === 0) {
+      console.error("Unexpected API response format:", raw);
       res.status(500).json({ error: "Invalid response from AI API" });
       return;
     }
-    console.log(data);
+
     const imageUrl = data.data[0].imageURL;
     console.log(imageUrl);
 
