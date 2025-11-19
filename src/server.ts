@@ -2,15 +2,16 @@
 import express, { Request, Response, Application } from "express";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
-import {cloudinaryApiKey, cloudinaryApiSecret, cloudinaryName, runwareApiKey} from "./secrets";
 import { v2 as cloudinary } from "cloudinary";
 import fetch from "node-fetch"; // Ensure node-fetch is installed
+import dotenv from "dotenv";
+dotenv.config();
 
 const app: Application = express();
 app.use(cors());
 app.use(express.json());
 
-const API_KEY = runwareApiKey;
+const API_KEY = process.env.VITE_RUNWARE_API_KEY;
 
 // Define the expected response type
 interface RunwareApiResponse {
@@ -18,9 +19,9 @@ interface RunwareApiResponse {
 }
 
 cloudinary.config({
-  cloud_name: cloudinaryName,
-  api_key: cloudinaryApiKey,
-  api_secret: cloudinaryApiSecret,
+  cloud_name: process.env.VITE_CLOUDINARY_NAME,
+  api_key: process.env.VITE_CLOUDINARY_API_KEY,
+  api_secret: process.env.VITE_CLOUDINARY_API_SECRET,
   secure: true,
 });
 
